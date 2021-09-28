@@ -37,14 +37,117 @@ Se define la estructura de un catálogo de videos. El catálogo tendrá dos list
 los mismos.
 """
 
-# Construccion de modelos
+# Construccion de modelos######################################################################################
 
-# Funciones para agregar informacion al catalogo
 
-# Funciones para creacion de datos
+###EMPIEZA EJEMPLO
+def newCatalog():
+    
+    catalog = {'books': None,
+               'bookIds': None,
+               'authors': None,
+               'tags': None,
+               'tagIds': None,
+               'years': None}
+    
+    catalog['books'] = lt.newList('SINGLE_LINKED', compareBookIds)
+    catalog['bookIds'] = mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=compareMapBookIds)
+    
+    catalog['tags'] = mp.newMap(34500,
+                                maptype='PROBING',
+                                loadfactor=0.5,
+                                comparefunction=compareTagNames)
+    return catalog
+###TERMINA EJEMPLO
 
-# Funciones de consulta
 
-# Funciones utilizadas para comparar elementos dentro de una lista
+def newCatalog():
 
-# Funciones de ordenamiento
+    catalog = {}
+# Funciones para agregar informacion al catalogo#####################################################################
+###EMPIEZA EJEMPLO
+def addBookTag(catalog, tag):
+    """
+    Agrega una relación entre un libro y un tag.
+    Para ello se adiciona el libro a la lista de libros
+    del tag.
+    """
+    bookid = tag['goodreads_book_id']
+    tagid = tag['tag_id']
+    entry = mp.get(catalog['tagIds'], tagid)
+
+    if entry:
+        tagbook = mp.get(catalog['tags'], me.getValue(entry)['name'])
+        tagbook['value']['total_books'] += 1
+        tagbook['value']['count'] += int(tag['count'])
+        book = mp.get(catalog['bookIds'], bookid)
+        if book:
+            lt.addLast(tagbook['value']['books'], book['value'])
+###TERMINA EJEMPLO 
+
+
+"Aquí empieza el CODE"
+# Funciones para creacion de datos############################################################################
+
+
+###EMPIEZA EJEMPLO
+
+###TERMINA EJEMPLO 
+
+
+"Aquí empieza el CODE"
+
+# Funciones de consulta#######################################################################################
+
+
+###EMPIEZA EJEMPLO
+def getBooksByAuthor(catalog, authorname):
+    """
+    Retorna un autor con sus libros a partir del nombre del autor
+    """
+    author = mp.get(catalog['authors'], authorname)
+    if author:
+        return me.getValue(author)
+    return None
+
+def booksSize(catalog):
+    """
+    Número de libros en el catago
+    """
+    return lt.size(catalog['books'])
+###TERMINA EJEMPLO 
+
+
+"Aquí empieza el CODE"
+# Funciones utilizadas para comparar elementos dentro de una lista###########################
+
+
+###EMPIEZA EJEMPLO
+def compareMapBookIds(id, entry):
+    """
+    Compara dos ids de libros, id es un identificador
+    y entry una pareja llave-valor
+    """
+    identry = me.getKey(entry)
+    if (int(id) == int(identry)):
+        return 0
+    elif (int(id) > int(identry)):
+        return 1
+    else:
+        return -1
+###TERMINA EJEMPLO 
+
+
+"Aquí empieza el CODE"
+# Funciones de ordenamiento##############################################
+
+
+###EMPIEZA EJEMPLO
+
+###TERMINA EJEMPLO 
+
+
+"Aquí empieza el CODE"
