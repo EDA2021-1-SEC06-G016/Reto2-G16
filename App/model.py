@@ -101,12 +101,3 @@ def addArtwork(catalog, artwork):
 # Funciones para agregar informacion al catalogo
 # Construccion de modelos
 
-# Funciones para agregar informacion al catalogo
-
-# Funciones para creacion de datos
-
-# Funciones de consulta
-
-# Funciones utilizadas para comparar elementos dentro de una lista
-
-# Funciones de ordenamiento

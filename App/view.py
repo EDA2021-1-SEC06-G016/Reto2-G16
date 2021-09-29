@@ -36,8 +36,26 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("1- Cargar información en el catálogo.")
+    print("2- Las n obras más antiguas para un medio específico")
+    print("ant2 3real- REQ2/GRUPAL/- Ordenar catalogo de obras por año de adquisición-PARARETO NO SE HA EMPEZADO")
+    print("4- Clasificar obras de un artista por tecnica-PARARETO NO SE HA EMPEZADO")
+    print("5- Clasificar obras por nacionalidad de creadores-PARARETO NO SE HA EMPEZADO")
+    print("6- Transportar obras de un departamento-PARARETO NO SE HA EMPEZADO")
+    print("ant6 7real- REQ6/BONO/- Proponer un nueva exposición en el museo-PARARETO NO SE HA EMPEZADO")
+    print("0- Salir")
+
+def initCatalog():
+    """
+    Inicializa el catalogo de libros
+    """
+    return controller.initCatalog()
+
+def loadData(catalog):
+    """
+    Carga los libros en la estructura de datos
+    """
+    controller.loadData(catalog)
 
 catalog = None
 
@@ -69,9 +87,20 @@ while True:
         #authors->artwork
         #Código original para cargar archivos termina
 
-    elif int(inputs[0]) == 2:
+        print('Artistas cargados: ' + str(lt.size(catalog['artists'])))
+        #books -> artist 
+        print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
+        #authors->artwork
+    elif int(inputs[0]) == 3:
         pass
 
     else:
         sys.exit(0)
 sys.exit(0)
+"""
+    elif int(inputs[0]) == 2:
+        artws = input("Número de obras más antiguas: ")
+        func = controller.funcname(parat1, parat2,...)
+        print(func)
+    """
+    
