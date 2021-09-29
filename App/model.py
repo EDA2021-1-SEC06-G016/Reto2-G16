@@ -36,7 +36,69 @@ assert cf
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
 """
+def newCatalog():
+    catalog = {'artists': None,  #books->artist
+               'artworks': None,
+               'mapMedium':None}    #authors->artworks
 
+    catalog['artists'] = lt.newList("ARRAY_LSIT") #USANDO "type" con el código comentado en vez del tipo de lista
+    catalog['artworks'] = lt.newList("ARRAY_LSIT")
+    catalog['mapMedium'] = mp.newMap(numelements=1000, maptype='PROBING',loadfactor=0.5,comparefunction=compareMediums)
+    return catalog
+
+
+def compareMediums(keyname, author):
+    """
+    Compara dos nombres de autor. El primero es una cadena
+    y el segundo un entry de un map
+    """
+    authentry = me.getKey(author)
+    if (keyname == authentry):
+        return 0
+    elif (keyname > authentry):
+        return 1
+    else:
+        return -1
+
+def addArtist(catalog, artist):
+    """
+    Adiciona un artist a la lista de artists
+    """
+    t = (artist['ConstituentID'], artist['DisplayName'], artist['ArtistBio'], #newArtist al inicio si algo 
+    artist['Nationality'], artist['Gender'], artist['BeginDate'], artist['EndDate'], 
+    artist['Wiki QID'], artist['ULAN'])
+    lt.addLast(catalog['artists'], t)
+
+def addArtwork(catalog, artwork):
+    """
+    Adiciona un tag a la lista de tags
+    """
+    t = (artwork['ObjectID'], artwork['Title'], artwork['ConstituentID'], #newArtwork al inicio
+    artwork['Date'], artwork['Medium'], artwork['Dimensions'], 
+    artwork['CreditLine'], artwork['AccessionNumber'], artwork['Classification'], 
+    artwork['Department'], artwork['DateAcquired'], artwork['Cataloged'], 
+    artwork['URL'], artwork['Circumference (cm)'], artwork['Depth (cm)'], 
+    artwork['Diameter (cm)'], artwork['Height (cm)'], artwork['Length (cm)'], 
+    artwork['Weight (kg)'], artwork['Width (cm)'], artwork['Seat Height (cm)'], 
+    artwork['Duration (sec.)'])
+    lt.addLast(catalog['artworks'], t)
+
+#Todo
+    medium = artwork['Medium']
+    esta = mp.contains(catalog['mapMedium'], medium)
+    if( esta == True):
+        #*["value"] solo retorna el value, y no la pareja llave valor
+        lista = mp.get(catalog['mapMedium'],medium)["value"]
+        lt.addLast(lista,artwork)
+        #!map llave valro con lista
+        mp.put(catalog['mapMedium'],medium,lista)
+
+    else:
+        #! repasar
+        lista = lt.newList()
+        lt.addLast(lista,artwork)
+        mp.put(catalog['mapMedium'],medium,lista)
+# Funciones para agregar informacion al catalogo
 # Construccion de modelos
 
 # Funciones para agregar informacion al catalogo
