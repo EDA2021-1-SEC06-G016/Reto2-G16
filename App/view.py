@@ -45,45 +45,41 @@ def printMenu():
     print("ant6 7real- REQ6/BONO/- Proponer un nueva exposición en el museo-PARARETO NO SE HA EMPEZADO")
     print("0- Salir")
 
-def initCatalog():
+def initCatalog(): #Va "typelist" como parametro
     """
-    Inicializa el catalogo de libros
+    Llama la funcion de inicializacion del catalogo del modelo.
     """
-    return controller.initCatalog()
+    catalog = model.newCatalog() #Va "typelist" como parametro
+    return catalog
 
 def loadData(catalog):
     """
-    Carga los libros en la estructura de datos
+    Carga los datos de los archivos y cargar los datos en la
+    estructura de datos
     """
-    controller.loadData(catalog)
+    loadArtists(catalog)
+    loadArtworks(catalog)
 
-catalog = None
-
-"""
-Menu principal
-"""
-while True:
-    printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
-        catalog = controller.initCatalog()   
-        loadData(catalog)
-
-        print('Artistas cargados: ' + str(lt.size(catalog['artists'])))
-        #books -> artist 
-        print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
-        #authors->artwork
-    elif int(inputs[0]) == 3:
-        pass
-
-    else:
-        sys.exit(0)
-sys.exit(0)
-"""
-    elif int(inputs[0]) == 2:
-        artws = input("Número de obras más antiguas: ")
-        func = controller.funcname(parat1, parat2,...)
-        print(func)
+def loadArtists(catalog):
     """
+    Carga los libros del archivo. Por cada libro se toman sus autores y por
+    cada uno de ellos, se crea en la lista de autores, a dicho autor y una
+    referencia al libro que se esta procesando.
+    """
+    artistsfile = cf.data_dir + 'Artists-utf8-small.csv' #para cambiar el archivo
+    input_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
+    for artist in input_file:
+        model.addArtist(catalog, artist)
+
+def loadArtworks(catalog):
+    """
+    Carga los libros del archivo. Por cada libro se toman sus autores y por
+    cada uno de ellos, se crea en la lista de autores, a dicho autor y una
+    referencia al libro que se esta procesando.
+    """
+    artworksfile = cf.data_dir + 'Artworks-utf8-small.csv' #para cambiar el archivo
+    input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
+    for artwork in input_file:
+        model.addArtwork(catalog, artwork)
+
     
