@@ -101,3 +101,196 @@ def addArtwork(catalog, artwork):
 # Funciones para agregar informacion al catalogo
 # Construccion de modelos
 
+
+###EMPIEZA EJEMPLO
+def newCatalog():
+    
+    catalog = {'books': None,
+               'bookIds': None,
+               'authors': None,
+               'tags': None,
+               'tagIds': None,
+               'years': None}
+    
+    catalog['books'] = lt.newList('SINGLE_LINKED')
+    catalog['bookIds'] = mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
+    
+    catalog['tags'] = mp.newMap(34500,
+                                maptype='PROBING',
+                                loadfactor=0.5,
+                                comparefunction=None)
+    return catalog
+###TERMINA EJEMPLO
+
+
+def newCatalog():
+    catalog = {'artists': None,  
+               'artworks': None,
+               "artistsID": None,
+               "artworksID": None,
+               "medium": None}
+
+    catalog['artists'] = mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None) 
+    catalog['artworks'] = mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
+
+    catalog["artistsID"] = mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
+
+
+    catalog["artworksID"] = mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=None)
+    
+    catalog["medium"] = mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0)
+    return catalog
+# Funciones para creación de datos ##########################################################################
+
+
+# Funciones para agregar informacion al catalogo#####################################################################
+###EMPIEZA EJEMPLO
+
+###TERMINA EJEMPLO 
+
+#PARA CAMBIAR DEBIDO A LOS MAPS#//
+def addArtist(catalog, artist):
+    """
+    Agrega una relación entre un libro y un tag.
+    Para ello se adiciona el libro a la lista de libros
+    del tag.
+    """
+    artistID = catalog['ConstituentID']
+    entry = mp.contains(catalog['ConstituentID'], artistID)
+    newartist = (artist['DisplayName'], artist['ArtistBio'], #newArtist al inicio si algo 
+    artist['Nationality'], artist['Gender'], artist['BeginDate'], artist['EndDate'], 
+    artist['Wiki QID'], artist['ULAN'])
+
+    if entry == False:
+       mp.put(catalog["artists"], artist["ConstituentID"], newartist)
+    
+#########para eliminar
+"""
+def addArtist(catalog, artist):
+    
+    
+    t = (artist['ConstituentID'], artist['DisplayName'], artist['ArtistBio'], #newArtist al inicio si algo 
+    artist['Nationality'], artist['Gender'], artist['BeginDate'], artist['EndDate'], 
+    artist['Wiki QID'], artist['ULAN'])
+    lt.addLast(catalog['artists'], t)
+"""
+def addArtwork(catalog, artwork):
+
+    artistID = catalog['ObjectID']
+    entry = mp.contains(artwork['ObjectID'], artistID)
+    newartwork = ((artwork['ObjectID'], artwork['Title'], artwork['ConstituentID'], #newArtwork al inicio
+    artwork['Date'], artwork['Medium'], artwork['Dimensions'], 
+    artwork['CreditLine'], artwork['AccessionNumber'], artwork['Classification'], 
+    artwork['Department'], artwork['DateAcquired'], artwork['Cataloged'], 
+    artwork['URL'], artwork['Circumference (cm)'], artwork['Depth (cm)'], 
+    artwork['Diameter (cm)'], artwork['Height (cm)'], artwork['Length (cm)'], 
+    artwork['Weight (kg)'], artwork['Width (cm)'], artwork['Seat Height (cm)'], 
+    artwork['Duration (sec.)']))
+
+    if entry == False:
+       mp.put(catalog["artists"], artwork['ObjectID'], newartwork)
+###para eliminar
+"""
+def addArtwork(catalog, artwork):
+    
+    t = (artwork['ObjectID'], artwork['Title'], artwork['ConstituentID'], #newArtwork al inicio
+    artwork['Date'], artwork['Medium'], artwork['Dimensions'], 
+    artwork['CreditLine'], artwork['AccessionNumber'], artwork['Classification'], 
+    artwork['Department'], artwork['DateAcquired'], artwork['Cataloged'], 
+    artwork['URL'], artwork['Circumference (cm)'], artwork['Depth (cm)'], 
+    artwork['Diameter (cm)'], artwork['Height (cm)'], artwork['Length (cm)'], 
+    artwork['Weight (kg)'], artwork['Width (cm)'], artwork['Seat Height (cm)'], 
+    artwork['Duration (sec.)'])
+    lt.addLast(catalog['artworks'], t)
+"""
+###Obviar esto, es para adelantar lo del medium
+"""
+def artistID(catalog, artists, name):
+    artists = catalog['artists']
+    existname = mp.contains(artists, existname)
+    if existname:
+        entry = mp.get(artists, existname)
+        artist = me.getValue(entry)
+    else:
+        author = newAuthor(authorname)
+        mp.put(authors, authorname, author)
+    lt.addLast(artists['DisplayName'], book)
+
+    totbooks = lt.size(author['books'])
+"""   
+    
+# Funciones para creacion de datos############################################################################
+
+
+###EMPIEZA EJEMPLO
+
+###TERMINA EJEMPLO 
+
+
+"Aquí empieza el CODE"
+
+# Funciones de consulta#######################################################################################
+
+
+###EMPIEZA EJEMPLO
+"""
+def getBooksByAuthor(catalog, authorname):
+    
+    author = mp.get(catalog['authors'], authorname)
+    if author:
+        return me.getValue(author)
+    return None
+
+def booksSize(catalog):
+    
+    return lt.size(catalog['books'])
+"""
+###TERMINA EJEMPLO 
+
+
+"Aquí empieza el CODE"
+# Funciones utilizadas para comparar elementos dentro de una lista###########################
+
+
+###EMPIEZA EJEMPLO
+"""
+def compareMapBookIds(id, entry):
+    
+    identry = me.getKey(entry)
+    if (int(id) == int(identry)):
+        return 0
+    elif (int(id) > int(identry)):
+        return 1
+    else:
+        return -1
+"""
+###TERMINA EJEMPLO 
+
+
+"Aquí empieza el CODE"
+# Funciones de ordenamiento##############################################
+
+
+###EMPIEZA EJEMPLO
+
+###TERMINA EJEMPLO 
+
+
+"Aquí empieza el CODE"
