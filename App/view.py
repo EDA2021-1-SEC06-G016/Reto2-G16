@@ -26,7 +26,7 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 
-
+import csv
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -49,7 +49,7 @@ def initCatalog(): #Va "typelist" como parametro
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
-    catalog = model.newCatalog() #Va "typelist" como parametro
+    catalog = controller.newCatalog() 
     return catalog
 
 def loadData(catalog):
@@ -66,10 +66,10 @@ def loadArtists(catalog):
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
-    artistsfile = cf.data_dir + 'Artists-utf8-small.csv' #para cambiar el archivo
+    artistsfile = cf.data_dir + 'GoodReads/Artists-utf8-small.csv' #para cambiar el archivo
     input_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     for artist in input_file:
-        model.addArtist(catalog, artist)
+        controller.addArtist(catalog, artist)
 
 def loadArtworks(catalog):
     """
@@ -77,9 +77,28 @@ def loadArtworks(catalog):
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
-    artworksfile = cf.data_dir + 'Artworks-utf8-small.csv' #para cambiar el archivo
+    artworksfile = cf.data_dir + 'GoodReads/Artworks-utf8-small.csv' #para cambiar el archivo
     input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
     for artwork in input_file:
-        model.addArtwork(catalog, artwork)
+        controller.addArtwork(catalog, artwork)
 
     
+"""
+Menu principal
+"""
+while True:
+    printMenu()
+    inputs = input('Seleccione una opción para continuar\n')
+    if int(inputs[0]) == 1:
+        print("Cargando información de los archivos ....")
+        catalog = controller.initCatalog()   
+        loadData(catalog)
+
+        print('Artistas cargados: ' + str(lt.size(catalog['artists'])))
+        #books -> artist 
+        print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
+        #authors->artwork
+    elif int(inputs[0]) == 2:
+        x = input("Número de obras más antiguas: ")
+        func = controller.topmed(catalog, artwork,x)
+        print(func)

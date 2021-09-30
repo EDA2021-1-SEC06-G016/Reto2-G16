@@ -101,6 +101,27 @@ def addArtwork(catalog, artwork):
         lt.addLast(lista,artwork)
         mp.put(catalog['mapMedium'],medium,lista)
 
+def topmed(catalog, artwork,x):
+    artw = artwork["Medium"]
+    med = artw["Medium"]
+    esta = mp.contains(catalog["mapMedium"], med)
+    if esta == True:
+        list = mp.valueSet(catalog["mapMedium"], med)
+        n = int(len(list))
+        gap = int(n/2)
+  
+        while gap > 0:
+            for i in range(int(gap),int(n)):
+                temp = list[i]
+                j = i
+                while  j >= gap and list[j-gap]['DateAcquired'] >temp['DateAcquired']:
+                    list[j] = list[j-gap]
+                    j -= gap
+                list[j] = temp
+            gap /= 2
+        return lt.getElement[list, x]
+    else:
+        print("El medio no se encuentra en el catalogo, seleccione uno disponible")
 
 ######################ssssssssssssssssssss
 
