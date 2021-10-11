@@ -64,8 +64,8 @@ def loadArtworks(catalog):
     input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
     for artwork in input_file:
         model.addArtwork(catalog, artwork)
-def topmed(catalog, artwork,x):
-    model.topmed(catalog, artwork,x)
+def topmed(catalog,x):
+    model.topmed(catalog,x)
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo

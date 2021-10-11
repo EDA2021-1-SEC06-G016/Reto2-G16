@@ -101,7 +101,8 @@ def addArtwork(catalog, artwork):
         lt.addLast(lista,artwork)
         mp.put(catalog['mapMedium'],medium,lista)
 
-def topmed(catalog, artwork,x):
+def topmed(catalog,x):
+    artwork = catalog["artworks"]
     artw = artwork["Medium"]
     med = artw["Medium"]
     esta = mp.contains(catalog["mapMedium"], med)
@@ -119,7 +120,7 @@ def topmed(catalog, artwork,x):
                     j -= gap
                 list[j] = temp
             gap /= 2
-        return lt.getElement[list, x]
+        return lt.getElement(list, x)
     else:
         print("El medio no se encuentra en el catalogo, seleccione uno disponible")
 

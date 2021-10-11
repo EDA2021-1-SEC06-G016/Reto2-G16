@@ -100,5 +100,5 @@ while True:
         #authors->artwork
     elif int(inputs[0]) == 2:
         x = input("Número de obras más antiguas: ")
-        func = controller.topmed(catalog, artwork,x)
+        func = controller.topmed(catalog, x)
         print(func)
