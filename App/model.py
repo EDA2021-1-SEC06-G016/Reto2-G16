@@ -24,7 +24,7 @@
  * Dario Correal - Version inicial
  """
 
-
+import time
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -38,16 +38,21 @@ los mismos.
 """
 
 ######################sssssssssssssssssss
+inicio = time.time()
 def newCatalog():
     catalog = {'artists': None, #books->artist
                'artworks': None,
-               'mapMedium':None} #authors->artworks
+               'mapMedium':None,
+               "mapNationality": None} #authors->artworks
 
     catalog['artists'] = lt.newList("ARRAY_LSIT") #USANDO "type" con el código comentado en vez del tipo de lista
     catalog['artworks'] = lt.newList("ARRAY_LSIT")
-    catalog['mapMedium'] = mp.newMap(numelements=1000, maptype='PROBING',loadfactor=0.5,comparefunction=compareMediums)
+    catalog['mapMedium'] = mp.newMap(numelements=1000, maptype='CHAINING',loadfactor=4.0,comparefunction=compareMediums)
+    catalog["mapNationality"] = mp.newMap(numelements=1000, maptype='CHAINING',loadfactor=4.0,comparefunction=compareNation)
     return catalog
-
+fin = time.time()
+timeex = round((fin-inicio), 2)
+print("Tiempo de ejecución de crga de datos " + str(timeex))
 
 def compareMediums(keyname, author):
     """
@@ -62,6 +67,19 @@ def compareMediums(keyname, author):
     else:
         return -1
 
+def compareNation(keyname, nationality):
+    """
+    Compara dos nacionalidades de obra. El primero es una cadena
+    y el segundo un entry de un map
+    """
+    natentry = me.getKey(nationality)
+    if (keyname == natentry):
+        return 0
+    elif (keyname > natentry):
+        return 1
+    else:
+        return -1
+
 def addArtist(catalog, artist):
     """
     Adiciona un artist a la lista de artists
@@ -70,6 +88,20 @@ def addArtist(catalog, artist):
     artist['Nationality'], artist['Gender'], artist['BeginDate'], artist['EndDate'],
     artist['Wiki QID'], artist['ULAN'])
     lt.addLast(catalog['artists'], t)
+
+#Indice nationality-artist
+    nationality = artist["Nationality"]
+    esta = mp.contains(catalog["mapNationality"], nationality)
+    if (esta == True):
+        lista = mp.get(catalog["mapNationality"], nationality)
+        lt.addLast(lista, artist)
+        
+        mp.put(catalog["mapNationality"], nationality, lista)
+    
+    else:
+        lista = lt.newList()
+        lt.addLast(lista, artist)
+        mp.put(catalog["mapNationality"], nationality, lista)
 
 def addArtwork(catalog, artwork):
     """
@@ -85,7 +117,7 @@ def addArtwork(catalog, artwork):
     artwork['Duration (sec.)'])
     lt.addLast(catalog['artworks'], t)
 
-#Todo
+#Indice medium-artworks
     medium = artwork['Medium']
     esta = mp.contains(catalog['mapMedium'], medium)
     if( esta == True):
@@ -101,6 +133,8 @@ def addArtwork(catalog, artwork):
         lt.addLast(lista,artwork)
         mp.put(catalog['mapMedium'],medium,lista)
 
+#Añadir a indice de nacionalidad las obras por artista # NO HECHO, NO SE ENTIENDE
+  
 def topmed(catalog,x):
     artwork = catalog["artworks"]
     artw = artwork["Medium"]
