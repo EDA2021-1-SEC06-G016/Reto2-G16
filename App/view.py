@@ -49,7 +49,7 @@ def initCatalog(): #Va "typelist" como parametro
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
-    catalog = controller.newCatalog() 
+    catalog = controller.initCatalog() 
     return catalog
 
 def loadData(catalog):
@@ -57,30 +57,8 @@ def loadData(catalog):
     Carga los datos de los archivos y cargar los datos en la
     estructura de datos
     """
-    loadArtists(catalog)
-    loadArtworks(catalog)
+    controller.loadData(catalog)
 
-def loadArtists(catalog):
-    """
-    Carga los libros del archivo. Por cada libro se toman sus autores y por
-    cada uno de ellos, se crea en la lista de autores, a dicho autor y una
-    referencia al libro que se esta procesando.
-    """
-    artistsfile = cf.data_dir + 'GoodReads/Artists-utf8-small.csv' #para cambiar el archivo
-    input_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
-    for artist in input_file:
-        controller.addArtist(catalog, artist)
-
-def loadArtworks(catalog):
-    """
-    Carga los libros del archivo. Por cada libro se toman sus autores y por
-    cada uno de ellos, se crea en la lista de autores, a dicho autor y una
-    referencia al libro que se esta procesando.
-    """
-    artworksfile = cf.data_dir + 'GoodReads/Artworks-utf8-small.csv' #para cambiar el archivo
-    input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
-    for artwork in input_file:
-        controller.addArtwork(catalog, artwork)
 
     
 """
@@ -90,15 +68,24 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
-        catalog = controller.initCatalog()   
-        loadData(catalog)
+        print("Inicializando catálogo ....")
+        cont = controller.initCatalog()
 
-        print('Artistas cargados: ' + str(lt.size(catalog['artists'])))
-        #books -> artist 
-        print('Obras cargadas: ' + str(lt.size(catalog['artworks'])))
-        #authors->artwork
+    elif int(inputs[0]) == 2:
+        print("Cargando información de los archivos ....")
+        catalog =controller.loadData(cont)
+        #Cantidad artistas   
+        print('Artistas cargados: ' + str(controller.artistSize(cont)))
+        #Cantidad obras
+        print('Obras cargadas: ' + str(controller.artworksSize(cont)))
+        #Cantidad nacionalidades
+        print("Nacionalidades cargadas: " + str(controller.nationalitiesSize(cont)))
+
     elif int(inputs[0]) == 2:
         x = input("Número de obras más antiguas: ")
         func = controller.topmed(catalog, x)
         print(func)
+
+    else:
+        sys.exit(0)
+sys.exit(0)

@@ -47,8 +47,8 @@ def newCatalog():
 
     catalog['artists'] = lt.newList("ARRAY_LSIT") #USANDO "type" con el código comentado en vez del tipo de lista
     catalog['artworks'] = lt.newList("ARRAY_LSIT")
-    catalog['mapMedium'] = mp.newMap(numelements=1000, maptype='CHAINING',loadfactor=4.0,comparefunction=compareMediums)
-    catalog["mapNationality"] = mp.newMap(numelements=1000, maptype='CHAINING',loadfactor=4.0,comparefunction=compareNation)
+    catalog['mapMedium'] = mp.newMap(numelements=1000, maptype='PROBING',loadfactor=0.5,comparefunction=compareMediums)
+    catalog["mapNationality"] = mp.newMap(numelements=1000, maptype='PROBING',loadfactor=0.5,comparefunction=compareNation)
     return catalog
 fin = time.time()
 timeex = round((fin-inicio), 2)
