@@ -64,8 +64,21 @@ def loadArtworks(catalog):
     input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
     for artwork in input_file:
         model.addArtwork(catalog, artwork)
-def topmed(catalog,x):
-    model.topmed(catalog,x)
+
+    
+def nationality(catalog, natio):
+    model.addNationality(catalog,natio)
+
+
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
+def artistsSize(catalog):
+    return model.artistSize(catalog)
+
+def artworksSize(catalog):
+    return model.artworksSize(catalog)
+
+def nationalitiesSize(catalog):
+    return model.nationalitiesSize(catalog)
