@@ -38,22 +38,118 @@ los mismos.
 """
 
 ######################sssssssssssssssssss
-inicio = time.time()
+
 def newCatalog():
     catalog = {'artists': None, #books->artist
                'artworks': None,
                'mapMedium':None,
                "mapNationality": None} #authors->artworks
 
-    catalog['artists'] = lt.newList("ARRAY_LSIT") #USANDO "type" con el código comentado en vez del tipo de lista
-    catalog['artworks'] = lt.newList("ARRAY_LSIT")
-    catalog['mapMedium'] = mp.newMap(numelements=1000, maptype='PROBING',loadfactor=0.5,comparefunction=compareMediums)
-    catalog["mapNationality"] = mp.newMap(numelements=1000, maptype='PROBING',loadfactor=0.5,comparefunction=compareNation)
+    catalog['artists'] = lt.newList(datastructure="ARRAY_LIST", cmpfunction= compareArtistIds) #VÁLIDO "ARRAY_LIST/SINGLE_LINKED"
+    catalog['artworks'] = lt.newList(datastructure="ARRAY_LIST", cmpfunction = compareArtworkIds)
+    catalog['mapMedium'] = mp.newMap(1000, maptype='PROBING',loadfactor=0.5,comparefunction=compareMediums)
+    catalog["mapNationality"] = mp.newMap(200, maptype='PROBING',loadfactor=0.5,comparefunction=compareNation)
     return catalog
-fin = time.time()
-timeex = round((fin-inicio), 2)
-print("Tiempo de ejecución de crga de datos " + str(timeex))
 
+
+
+
+def addArtist(catalog, artist):
+    """
+    Adiciona un artist a la lista de artists
+    """
+    t = (artist['ConstituentID'], artist['DisplayName'], artist['ArtistBio'], #newArtist al inicio si algo
+    artist['Nationality'], artist['Gender'], artist['BeginDate'], artist['EndDate'],
+    artist['Wiki QID'], artist['ULAN'])
+    lt.addLast(catalog['artists'], t)
+
+#Indice nationality-artist
+def addNationality(catalog, nationality):
+    artist = catalog["artists"]
+    artwork = catalog["artworks"]
+    nationality = artist["Nationality"]
+    #IdArtist = artist["ConstituentID"]
+    #IdArtwork = artwork["ConstituentID"]
+    esta = mp.contains(catalog["mapNationality"], nationality)
+    
+    #sumar uno a la nacio
+    
+    if (esta == True): 
+        pareja = mp.get(catalog["mapnationality"], nationality)
+        valor = int(me.getValue(pareja)) + 1
+        mp.put(catalog["mapNationality"], nationality, valor)
+    
+    else: #crear pareja llave-val e iniciar con 1
+        
+        mp.put(catalog["mapNationality"], nationality, 1)
+
+def addArtwork(catalog, artwork):
+    """
+    Adiciona un tag a la lista de tags
+    """
+    t = (artwork['ObjectID'], artwork['Title'], artwork['ConstituentID'], #newArtwork al inicio
+    artwork['Date'], artwork['Medium'], artwork['Dimensions'],
+    artwork['CreditLine'], artwork['AccessionNumber'], artwork['Classification'],
+    artwork['Department'], artwork['DateAcquired'], artwork['Cataloged'],
+    artwork['URL'], artwork['Circumference (cm)'], artwork['Depth (cm)'],
+    artwork['Diameter (cm)'], artwork['Height (cm)'], artwork['Length (cm)'],
+    artwork['Weight (kg)'], artwork['Width (cm)'], artwork['Seat Height (cm)'],
+    artwork['Duration (sec.)'])
+    lt.addLast(catalog['artworks'], t)
+
+
+#Indice medium-artworks
+    #medium = artwork['Medium']
+    #esta = mp.contains(catalog['mapMedium'], medium)
+    #if( esta == True):
+    #    #*["value"] solo retorna el value, y no la pareja llave valor
+    #    lista = mp.get(catalog['mapMedium'],medium)["value"]
+    #    lt.addLast(lista,artwork)
+    #    #!map llave valro con lista
+    #    mp.put(catalog['mapMedium'],medium,lista)
+
+    #else:
+    #    #! repasar
+    #    lista = lt.newList()
+    #    lt.addLast(lista,artwork)
+    #    mp.put(catalog['mapMedium'],medium,lista)
+
+###Funciones de consulta
+
+def artistsSize(catalog):
+    return lt.size(catalog["artist"])
+
+def artworksSize(catalog):
+    return lt.size(catalog["artwork"])
+
+def nationalitiesSize(catalog):
+    return mp.size(catalog["mapNationality"])
+#Añadir a indice de nacionalidad las obras por artista # NO HECHO, NO SE ENTIENDE
+  
+def topmed(catalog,x):
+    artwork = catalog["artworks"]
+    artw = artwork["Medium"]
+    med = artw["Medium"]
+    esta = mp.contains(catalog["mapMedium"], med)
+    if esta == True:
+        list = mp.valueSet(catalog["mapMedium"], med)
+        n = int(len(list))
+        gap = int(n/2)
+  
+        while gap > 0:
+            for i in range(int(gap),int(n)):
+                temp = list[i]
+                j = i
+                while  j >= gap and list[j-gap]['DateAcquired'] >temp['DateAcquired']:
+                    list[j] = list[j-gap]
+                    j -= gap
+                list[j] = temp
+            gap /= 2
+        return lt.getElement(list, x)
+    else:
+        print("El medio no se encuentra en el catalogo, seleccione uno disponible")
+
+######################Funciones de comparación
 def compareMediums(keyname, author):
     """
     Compara dos nombres de autor. El primero es una cadena
@@ -80,84 +176,22 @@ def compareNation(keyname, nationality):
     else:
         return -1
 
-def addArtist(catalog, artist):
-    """
-    Adiciona un artist a la lista de artists
-    """
-    t = (artist['ConstituentID'], artist['DisplayName'], artist['ArtistBio'], #newArtist al inicio si algo
-    artist['Nationality'], artist['Gender'], artist['BeginDate'], artist['EndDate'],
-    artist['Wiki QID'], artist['ULAN'])
-    lt.addLast(catalog['artists'], t)
-
-#Indice nationality-artist
-    nationality = artist["Nationality"]
-    esta = mp.contains(catalog["mapNationality"], nationality)
-    if (esta == True):
-        lista = mp.get(catalog["mapNationality"], nationality)
-        lt.addLast(lista, artist)
-        
-        mp.put(catalog["mapNationality"], nationality, lista)
-    
+def compareArtistIds(id, entry):
+    identry = me.getKey(entry)
+    if (int(id) == int(identry)):
+        return 0
+    elif (int(id) > int(identry)):
+        return 1
     else:
-        lista = lt.newList()
-        lt.addLast(lista, artist)
-        mp.put(catalog["mapNationality"], nationality, lista)
+        return -1
 
-def addArtwork(catalog, artwork):
-    """
-    Adiciona un tag a la lista de tags
-    """
-    t = (artwork['ObjectID'], artwork['Title'], artwork['ConstituentID'], #newArtwork al inicio
-    artwork['Date'], artwork['Medium'], artwork['Dimensions'],
-    artwork['CreditLine'], artwork['AccessionNumber'], artwork['Classification'],
-    artwork['Department'], artwork['DateAcquired'], artwork['Cataloged'],
-    artwork['URL'], artwork['Circumference (cm)'], artwork['Depth (cm)'],
-    artwork['Diameter (cm)'], artwork['Height (cm)'], artwork['Length (cm)'],
-    artwork['Weight (kg)'], artwork['Width (cm)'], artwork['Seat Height (cm)'],
-    artwork['Duration (sec.)'])
-    lt.addLast(catalog['artworks'], t)
-
-#Indice medium-artworks
-    medium = artwork['Medium']
-    esta = mp.contains(catalog['mapMedium'], medium)
-    if( esta == True):
-        #*["value"] solo retorna el value, y no la pareja llave valor
-        lista = mp.get(catalog['mapMedium'],medium)["value"]
-        lt.addLast(lista,artwork)
-        #!map llave valro con lista
-        mp.put(catalog['mapMedium'],medium,lista)
-
+def compareArtworkIds(id, entry):
+    identry = me.getKey(entry)
+    if (int(id) == int(identry)):
+        return 0
+    elif (int(id) > int(identry)):
+        return 1
     else:
-        #! repasar
-        lista = lt.newList()
-        lt.addLast(lista,artwork)
-        mp.put(catalog['mapMedium'],medium,lista)
-
-#Añadir a indice de nacionalidad las obras por artista # NO HECHO, NO SE ENTIENDE
-  
-def topmed(catalog,x):
-    artwork = catalog["artworks"]
-    artw = artwork["Medium"]
-    med = artw["Medium"]
-    esta = mp.contains(catalog["mapMedium"], med)
-    if esta == True:
-        list = mp.valueSet(catalog["mapMedium"], med)
-        n = int(len(list))
-        gap = int(n/2)
-  
-        while gap > 0:
-            for i in range(int(gap),int(n)):
-                temp = list[i]
-                j = i
-                while  j >= gap and list[j-gap]['DateAcquired'] >temp['DateAcquired']:
-                    list[j] = list[j-gap]
-                    j -= gap
-                list[j] = temp
-            gap /= 2
-        return lt.getElement(list, x)
-    else:
-        print("El medio no se encuentra en el catalogo, seleccione uno disponible")
-
-######################ssssssssssssssssssss
+        return -1
 
 # Construccion de modelos######################################################################################
