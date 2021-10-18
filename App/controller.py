@@ -75,7 +75,7 @@ def nationality(catalog, natio):
 # Funciones de consulta sobre el catálogo
 
 def artistsSize(catalog):
-    return model.artistSize(catalog)
+    return model.artistsSize(catalog)
 
 def artworksSize(catalog):
     return model.artworksSize(catalog)

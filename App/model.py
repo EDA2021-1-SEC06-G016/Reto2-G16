@@ -117,10 +117,10 @@ def addArtwork(catalog, artwork):
 ###Funciones de consulta
 
 def artistsSize(catalog):
-    return lt.size(catalog["artist"])
+    return lt.size(catalog["artists"])
 
 def artworksSize(catalog):
-    return lt.size(catalog["artwork"])
+    return lt.size(catalog["artworks"])
 
 def nationalitiesSize(catalog):
     return mp.size(catalog["mapNationality"])
