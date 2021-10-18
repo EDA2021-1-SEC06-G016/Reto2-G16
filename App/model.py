@@ -45,8 +45,8 @@ def newCatalog():
                'mapMedium':None,
                "mapNationality": None} #authors->artworks
 
-    catalog['artists'] = lt.newList(datastructure="ARRAY_LIST", cmpfunction= compareArtistIds) #VÁLIDO "ARRAY_LIST/SINGLE_LINKED"
-    catalog['artworks'] = lt.newList(datastructure="ARRAY_LIST", cmpfunction = compareArtworkIds)
+    catalog['artists'] = mp.newMap(maptype="CHAINING", loadfactor= 2,comparefunction= compareArtistIds) #VÁLIDO "ARRAY_LIST/SINGLE_LINKED"
+    catalog['artworks'] = mp.newMap(maptype="CHAINING", loadfactor= 2, comparefunction = compareArtworkIds)
     catalog['mapMedium'] = mp.newMap(1000, maptype='PROBING',loadfactor=0.5,comparefunction=compareMediums)
     catalog["mapNationality"] = mp.newMap(200, maptype='PROBING',loadfactor=0.5,comparefunction=compareNation)
     return catalog
@@ -58,12 +58,13 @@ def addArtist(catalog, artist):
     """
     Adiciona un artist a la lista de artists
     """
-    t = (artist['ConstituentID'], artist['DisplayName'], artist['ArtistBio'], #newArtist al inicio si algo
+    t = (artist['DisplayName'], artist['ArtistBio'], #newArtist al inicio si algo
     artist['Nationality'], artist['Gender'], artist['BeginDate'], artist['EndDate'],
     artist['Wiki QID'], artist['ULAN'])
-    lt.addLast(catalog['artists'], t)
+    mp.put(catalog['artists'], artist['ConstituentID'], t)
 
 #Indice nationality-artist
+#TODO
 def addNationality(catalog, nationality):
     artist = catalog["artists"]
     artwork = catalog["artworks"]
@@ -87,7 +88,7 @@ def addArtwork(catalog, artwork):
     """
     Adiciona un tag a la lista de tags
     """
-    t = (artwork['ObjectID'], artwork['Title'], artwork['ConstituentID'], #newArtwork al inicio
+    t = (artwork['Title'], artwork['ConstituentID'], #newArtwork al inicio
     artwork['Date'], artwork['Medium'], artwork['Dimensions'],
     artwork['CreditLine'], artwork['AccessionNumber'], artwork['Classification'],
     artwork['Department'], artwork['DateAcquired'], artwork['Cataloged'],
@@ -95,9 +96,9 @@ def addArtwork(catalog, artwork):
     artwork['Diameter (cm)'], artwork['Height (cm)'], artwork['Length (cm)'],
     artwork['Weight (kg)'], artwork['Width (cm)'], artwork['Seat Height (cm)'],
     artwork['Duration (sec.)'])
-    lt.addLast(catalog['artworks'], t)
+    mp.put(catalog['artworks'],artwork['ObjectID'] ,t)
 
-
+#TODO
 #Indice medium-artworks
     #medium = artwork['Medium']
     #esta = mp.contains(catalog['mapMedium'], medium)
@@ -117,15 +118,38 @@ def addArtwork(catalog, artwork):
 ###Funciones de consulta
 
 def artistsSize(catalog):
-    return lt.size(catalog["artists"])
+    return mp.size(catalog["artists"])
 
 def artworksSize(catalog):
-    return lt.size(catalog["artworks"])
+    return mp.size(catalog["artworks"])
 
 def nationalitiesSize(catalog):
     return mp.size(catalog["mapNationality"])
 #Añadir a indice de nacionalidad las obras por artista # NO HECHO, NO SE ENTIENDE
-  
+#TODO func generica
+def getLast3 (rangecat): #Últimas 3
+    lastsartworks = mp.newMap()
+    u = mp.size(rangecat["artwork"])
+    for i in range(u-2, u+1): #revisar rango
+        firstartwork = lt.getElement(rangecat["artwork"], i)
+        secondartwork = lt.getElement(rangecat["artwork"], i)
+        thirdartwork = lt.getElement(rangecat["artwork"], i)
+        lt.addLast(lastsartworks, firstartwork)
+        lt.addLast(lastsartworks, secondartwork)
+        lt.addLast(lastsartworks, thirdartwork)
+    return lastsartworks
+#TODO func generica
+def getFirst3 (rangecat): #Primeras 3 
+    firstsartworks = mp.newMap()
+    for i in range(1,4):
+        firstartwork = lt.getElement(rangecat["artwork"], i)
+        secondartwork = lt.getElement(rangecat["artwork"], i)
+        thirdartwork = lt.getElement(rangecat["artwork"], i)
+        lt.addLast(firstsartworks, firstartwork)
+        lt.addLast(firstsartworks, secondartwork)
+        lt.addLast(firstsartworks, thirdartwork)
+    return firstsartworks
+
 def topmed(catalog,x):
     artwork = catalog["artworks"]
     artw = artwork["Medium"]
