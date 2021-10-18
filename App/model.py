@@ -88,7 +88,7 @@ def addArtwork(catalog, artwork):
     """
     Adiciona un tag a la lista de tags
     """
-    t = (artwork['Title'], artwork['ConstituentID'], #newArtwork al inicio
+    t = (artwork['ObjectID'] , artwork['Title'],  #newArtwork al inicio
     artwork['Date'], artwork['Medium'], artwork['Dimensions'],
     artwork['CreditLine'], artwork['AccessionNumber'], artwork['Classification'],
     artwork['Department'], artwork['DateAcquired'], artwork['Cataloged'],
@@ -96,7 +96,7 @@ def addArtwork(catalog, artwork):
     artwork['Diameter (cm)'], artwork['Height (cm)'], artwork['Length (cm)'],
     artwork['Weight (kg)'], artwork['Width (cm)'], artwork['Seat Height (cm)'],
     artwork['Duration (sec.)'])
-    mp.put(catalog['artworks'],artwork['ObjectID'] ,t)
+    mp.put(catalog['artworks'],artwork['ConstituentID'],t)
 
 #TODO
 #Indice medium-artworks
