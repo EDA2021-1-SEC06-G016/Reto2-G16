@@ -262,7 +262,7 @@ def deleteMin(rbt):
     Encuentra y remueve la menor  llave de la tabla de simbolos
     y su valor asociado
 
-    TODO: No implementada en esta versión
+    : No implementada en esta versión
 
     rbt: La tabla de simbolos
     Returns:
@@ -289,7 +289,7 @@ def deleteMax(rbt):
     Encuentra y remueve la mayor llave de la tabla de simbolos
     y su valor asociado
 
-    TODO: No implementada en esta versión
+    : No implementada en esta versión
 
     Args:
         rbt: La tabla de simbolos

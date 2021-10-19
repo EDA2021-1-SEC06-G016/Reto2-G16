@@ -64,7 +64,7 @@ def addArtist(catalog, artist):
     mp.put(catalog['artists'], artist['ConstituentID'], t)
 
 #Indice nationality-artist
-#TODO
+#TODO natio
 def addNationality(catalog, nationality):
     artist = catalog["artists"]
     artwork = catalog["artworks"]
@@ -98,7 +98,7 @@ def addArtwork(catalog, artwork):
     artwork['Duration (sec.)'])
     mp.put(catalog['artworks'],artwork['ConstituentID'],t)
 
-#TODO
+#TODO medium
 #Indice medium-artworks
     #medium = artwork['Medium']
     #esta = mp.contains(catalog['mapMedium'], medium)
