@@ -38,12 +38,9 @@ def printMenu():
     print("Bienvenido")
     print("1- Inicializar catalogo....")
     print("2- Cargar catalogo...")
-    print("3- Indicar obras de nacionalidad")
-    print("4- ant2 3real- REQ2/GRUPAL/- Ordenar catalogo de obras por año de adquisición-PARARETO NO SE HA EMPEZADO")
-    print("5- Clasificar obras de un artista por tecnica-PARARETO NO SE HA EMPEZADO")
-    print("6- Clasificar obras por nacionalidad de creadores-PARARETO NO SE HA EMPEZADO")
-    print("7- Transportar obras de un departamento-PARARETO NO SE HA EMPEZADO")
-    print("8- ant6 7real- REQ6/BONO/- Proponer un nueva exposición en el museo-PARARETO NO SE HA EMPEZADO")
+    print("3- Artistas en orden")
+    print("4- Adquisiciones cronologicamente")
+    print("5- Clasificar obras de un artista por tecnica")
     print("0- Salir")
 
 def initCatalog(): #Va "typelist" como parametro
@@ -86,10 +83,19 @@ while True:
         timeex = round((fin-inicio), 2)
         print("Tiempo de ejecución de carga de datos " + str(timeex))
     elif int(inputs[0]) == 3:
-        natio = input("Escriba una nacionalidad: ")
-        func = controller.nationality(catalog, natio)
+        initano = input("Escriba un año inicial: ")
+        endano = input("Escriba un año final: ")
+        func = controller.namefunct(catalog, parameters)
         print(func)
-
+    elif int(inputs[0]) == 4:
+        inidate = input("Escriba una fecha inicial: ")
+        enddate = input("Escriba una fecha final: ")
+        func = controller.namefunct(catalog, parameters)
+        print(func)
+    elif int(inputs[0]) == 5:
+        name = input("Escriba el nombre del artista: ")
+        func = controller.namefunct(catalog, parameters)
+        print(func)
     else:
         sys.exit(0)
 sys.exit(0)
